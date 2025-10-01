@@ -4,33 +4,33 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 
 
 def simple_solution():
-    driver = webdriver.Chrome()
+    # Автоматическая установка ChromeDriver
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service)
     driver.maximize_window()
 
     try:
         # Переходим на сайт
         driver.get("https://www.rpachallenge.com/")
         wait = WebDriverWait(driver, 10)
-        # Считываем Exel
-        # Находим и кликаем по ссылке для скачивания Excel
-        download_link = wait.until(
-            EC.element_to_be_clickable((By.XPATH, "//a[contains(text(), 'Download Excel')]"))
-        )
-        download_link.click()
 
-        # Даем время для скачивания файла
-        time.sleep(3)
+        # Читаем Excel
+        df = pd.read_excel("https://www.rpachallenge.com/assets/downloadFiles/challenge.xlsx")
+        print(f"Найдено {len(df)} записей")
 
-        excel_url = "Users\Daniyar\Download\schallenge.xlsx"
-        df = pd.read_excel(excel_url)
-        #Нажимаем на Кнопку старт
+        # Нажимаем на кнопку
         wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Start']"))).click()
-        #Заполняем все формы
+
+        # Заполняем все формы
         for index, row in df.iterrows():
-            # Заполняем поля
+            print(f"Запись {index + 1}/{len(df)}")
+
+            # Заполняем каждое поле
             fields = ['labelFirstName', 'labelLastName', 'labelCompanyName',
                       'labelRole', 'labelAddress', 'labelEmail', 'labelPhone']
 
@@ -52,8 +52,6 @@ def simple_solution():
         time.sleep(3)
         driver.save_screenshot("result.png")
         print("Скриншот сохранен!")
-
-
 
     except Exception as e:
         print(f"Ошибка: {e}")
