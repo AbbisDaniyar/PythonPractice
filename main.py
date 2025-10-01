@@ -8,50 +8,70 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 
 
-def simple_solution():
-    # Автоматическая установка ChromeDriver
+def rpa_challenge_solution():
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service)
     driver.maximize_window()
 
     try:
-        # Переходим на сайт
+        print("Загружаем сайт...")
         driver.get("https://www.rpachallenge.com/")
-        wait = WebDriverWait(driver, 10)
 
-        # Читаем Excel
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.TAG_NAME, "body"))
+        )
+
+        print("Загружаем данные из Excel...")
         df = pd.read_excel("https://www.rpachallenge.com/assets/downloadFiles/challenge.xlsx")
         print(f"Найдено {len(df)} записей")
 
-        # Нажимаем на кнопку
-        wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Start']"))).click()
+        print("Нажимаем кнопку Start...")
+        start_button = WebDriverWait(driver, 20).until(
+            EC.element_to_be_clickable((By.XPATH, "//button[text()='Start']"))
+        )
+        start_button.click()
 
-        # Заполняем все формы
-        for index, row in df.iterrows():
-            print(f"Запись {index + 1}/{len(df)}")
+        time.sleep(3)
 
-            # Заполняем каждое поле
-            fields = ['labelFirstName', 'labelLastName', 'labelCompanyName',
-                      'labelRole', 'labelAddress', 'labelEmail', 'labelPhone']
+        successful_forms = 0
 
-            values = [str(row['First Name']), str(row['Last Name ']), str(row['Company Name']),
-                      str(row['Role in Company']), str(row['Address']), str(row['Email']),
-                      str(row['Phone Number'])]
+        for i in range(len(df)):
+            row = df.iloc[i]
+            print(f"Обрабатываем запись {i + 1}/{len(df)}")
 
-            for field, value in zip(fields, values):
-                input_field = wait.until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, f"input[formcontrolname='{field}']")))
-                input_field.clear()
-                input_field.send_keys(value)
+            field_data = {
+                'labelFirstName': str(row['First Name']),
+                'labelLastName': str(row['Last Name ']),
+                'labelCompanyName': str(row['Company Name']),
+                'labelRole': str(row['Role in Company']),
+                'labelAddress': str(row['Address']),
+                'labelEmail': str(row['Email']),
+                'labelPhone': str(row['Phone Number'])
+            }
 
-            # Отправляем форму
-            wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@value='Submit']"))).click()
-            time.sleep(0.2)
+            for field_name, value in field_data.items():
+                element = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, f"input[formcontrolname='{field_name}']"))
+                )
+                element.clear()
+                element.send_keys(value)
 
-        #Скриншот результата
+            submit_btn = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, "input[value='Submit']"))
+            )
+            submit_btn.click()
+            successful_forms += 1
+
+            time.sleep(0.5)
+
+        print(f"Задание завершено! Успешно отправлено {successful_forms}/{len(df)} форм")
+
         time.sleep(3)
         driver.save_screenshot("result.png")
-        print("Скриншот сохранен!")
+        print("Скриншот сохранен")
+
+        result_element = driver.find_element(By.CLASS_NAME, "congratulations")
+        print(result_element.text)
 
     except Exception as e:
         print(f"Ошибка: {e}")
@@ -61,4 +81,4 @@ def simple_solution():
 
 
 if __name__ == "__main__":
-    simple_solution()
+    rpa_challenge_solution()
