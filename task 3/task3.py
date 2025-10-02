@@ -18,6 +18,7 @@ class ColorGameBot:
     def __init__(self):
         self.setup_driver()
         self.score = 0
+        self.start_time = 0
 
     def setup_driver(self):
         """Настройка Chrome драйвера"""
@@ -30,14 +31,20 @@ class ColorGameBot:
 
     def start_game(self):
         """Запуск игры"""
-        print(" Запуск бота...")
+        print("Запуск бота...")
         self.driver.get("https://www.arealme.com/colors/ru/")
         time.sleep(2)
 
         start_btn = self.driver.find_element(By.ID, "start")
         start_btn.click()
         print("🎮 Игра начата!")
+        self.start_time = time.time()
         time.sleep(2)
+
+    def get_remaining_time(self):
+        """Получение оставшегося времени"""
+        elapsed = time.time() - self.start_time
+        return max(0, 60 - elapsed)
 
     def find_color_elements(self):
         """Поиск цветных элементов на странице"""
@@ -97,6 +104,21 @@ class ColorGameBot:
 
         return False
 
+    def run_game(self):
+        """Основной игровой цикл"""
+        if not self.start_game():
+            return
+
+        print("⏱ Игра началась! Время: 60 секунд")
+
+        # Основной игровой цикл
+        while self.get_remaining_time() > 0:
+            self.play_round()
+            time.sleep(0.1)
+
+        print(f"Финальный счет: {self.score}")
+        self.driver.save_screenshot(f"result_{self.score}.png")
+
     def close(self):
         """Закрытие браузера"""
         self.driver.quit()
@@ -105,16 +127,7 @@ class ColorGameBot:
 def main():
     bot = ColorGameBot()
     try:
-        bot.start_game()
-
-        # Простая демонстрация
-        for i in range(10):
-            if bot.play_round():
-                print(f"Успешный клик! Счет: {bot.score}")
-            time.sleep(1)
-
-        print(f"Финальный счет: {bot.score}")
-
+        bot.run_game()
     finally:
         bot.close()
 
