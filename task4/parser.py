@@ -257,7 +257,9 @@ class DomkorParser:
 
 
 def main():
+    """Главная функция - просто передайте URL"""
     BASE_URL = "https://www.domkor-dom.com/prodazha-kvartir-Novostroiki/kvartira-Naberezhnye-Chelny/"
+
     parser = DomkorParser(BASE_URL)
     parser.run()
 
