@@ -162,6 +162,60 @@ class DomkorParser:
         except Exception as e:
             return []
 
+    def clean_sheet_name(self, name):
+        """Очистка имени для Excel листа"""
+        cleaned = re.sub(r'[\\/*?\[\]:]', '_', name)
+        cleaned = re.sub(r'\s+', ' ', cleaned).strip()
+        return cleaned[:31]
+
+    def save_all_to_excel(self, filename="Все_ЖК_Domkor.xlsx"):
+        """Сохранение всех данных в один Excel файл"""
+        try:
+            with pd.ExcelWriter(filename, engine='openpyxl') as writer:
+
+                summary_data = []
+                total_apartments = 0
+
+                for jk_title, apartments in self.all_apartments.items():
+                    if apartments:
+                        df_data = []
+                        for apt in apartments:
+                            df_data.append({
+                                '№ Подъезда': apt.get('№ Подъезда', 1),
+                                'Этаж': apt.get('Этаж', 1),
+                                '№ Кв.': apt.get('№ Кв.', ''),
+                                'Комнаты': apt.get('Комнаты', ''),
+                                'Общая площадь': apt.get('Общая площадь', 0),
+                                'Цена': apt.get('Цена', 0),
+                                'Площадь (строка)': apt.get('Площадь строка', ''),
+                                'Цена (строка)': apt.get('Цена строка', '')
+                            })
+
+                        df = pd.DataFrame(df_data)
+                        sheet_name = self.clean_sheet_name(jk_title)
+                        df.to_excel(writer, sheet_name=sheet_name, index=False)
+
+                        summary_data.append({
+                            'Жилой комплекс': jk_title,
+                            'Количество квартир': len(apartments),
+                            'Средняя площадь': f"{sum(apt.get('Общая площадь', 0) for apt in apartments) / len(apartments):.1f}",
+                            'Средняя цена': f"{sum(apt.get('Цена', 0) for apt in apartments) / len(apartments):,.0f}"
+                        })
+                        total_apartments += len(apartments)
+
+                if summary_data:
+                    summary_df = pd.DataFrame(summary_data)
+                    summary_df.to_excel(writer, sheet_name='Сводка', index=False)
+
+            print(f"Файл сохранен: {filename}")
+            print(f"Обработано ЖК: {len(self.all_apartments)}")
+            print(f"Всего квартир: {total_apartments}")
+            return True
+
+        except Exception as e:
+            print(f"Ошибка при сохранении: {e}")
+            return False
+
     def run(self):
         """Основной метод запуска парсера"""
         try:
@@ -188,6 +242,11 @@ class DomkorParser:
 
                 if i < len(jk_links):
                     time.sleep(1)
+
+            if self.all_apartments:
+                self.save_all_to_excel()
+            else:
+                print("Нет данных для сохранения")
 
         except Exception as e:
             print(f"Критическая ошибка: {e}")
