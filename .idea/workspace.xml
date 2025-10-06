@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3af7c0d6-1959-4250-9df3-2fc08d1b1cb4" name="Changes" comment="оптимизированная версия" />
+    <list default="true" id="3af7c0d6-1959-4250-9df3-2fc08d1b1cb4" name="Changes" comment="Добавление сохранения в Excel">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task 3/record_5704.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/task4/parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/task4/parser.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -43,7 +47,9 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.apartments.executor&quot;: &quot;Run&quot;,
     &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.parser.executor&quot;: &quot;Run&quot;,
     &quot;Python.task2.executor&quot;: &quot;Run&quot;,
     &quot;Python.task3.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
@@ -128,7 +134,31 @@
       <option name="project" value="LOCAL" />
       <updated>1759419053734</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Добавление поиска ссылок на ЖК">
+      <option name="closed" value="true" />
+      <created>1759439970769</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1759439970769</updated>
+    </task>
+    <task id="LOCAL-00009" summary=" Добавление парсинга данных квартир">
+      <option name="closed" value="true" />
+      <created>1759441806998</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1759441806998</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Добавление сохранения в Excel">
+      <option name="closed" value="true" />
+      <created>1759476984210</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1759476984210</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -150,6 +180,9 @@
     <MESSAGE value="добавил базовую игровую логику" />
     <MESSAGE value="Добавлен таймер и основной игрового цикл" />
     <MESSAGE value="оптимизированная версия" />
-    <option name="LAST_COMMIT_MESSAGE" value="оптимизированная версия" />
+    <MESSAGE value="Добавление поиска ссылок на ЖК" />
+    <MESSAGE value=" Добавление парсинга данных квартир" />
+    <MESSAGE value="Добавление сохранения в Excel" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавление сохранения в Excel" />
   </component>
 </project>
